@@ -59,7 +59,7 @@ contact archontis.politis@aalto.fi
   * [Microphone Signals to Spherical Harmonic signals [refs 1-4]](#mic2sh)
   * [Signal-independent Beamforming in the Spherical Harmonic Domain [refs 5-10]](#sibeam)
   * [Signal-Dependent and Parametric Beamforming [refs 11-12]](#sdbeam)
-  * [Direction-of-Arrival (DoA) Estimation in the SHD](#doa)
+  * [Direction-of-Arrival (DoA) Estimation in the SHD [ref 13]](#doa)
   * [Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 14-18]](#diffuseness)  
   * [Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,19]](#dfc)
   * [References](#references)
@@ -147,7 +147,8 @@ the power output, or by a subspace approach such as MUSIC. Another
 alternative is to utilize the acoustic intensity vector, obtained from
 the first-order signals, which its temporal and spatial statistics reveal
 information about presence and distribution of sound sources. For an 
-overview on steered-response power techniques, the reader is refered to [ref 13].
+overview on steered-response power techniques in the SHD, the reader is 
+refered to [ref 13].
 
 A few examples of DoA estimation in the SHD are included in the library:
 
