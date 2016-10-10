@@ -59,9 +59,9 @@ contact archontis.politis@aalto.fi
   * [Microphone Signals to Spherical Harmonic signals [refs 1-4]](#mic2sh)
   * [Signal-independent Beamforming in the Spherical Harmonic Domain [refs 5-10]](#sibeam)
   * [Signal-Dependent and Parametric Beamforming [refs 11-12]](#sdbeam)
-  * [Direction-of-Arrival (DoA) Estimation in the SHD](#doa)
-  * [Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 13-17]](#diffuseness)  
-  * [Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,18]](#dfc)
+  * [Direction-of-Arrival (DoA) Estimation in the SHD(#doa)
+  * [Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 14-18]](#diffuseness)  
+  * [Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,19]](#dfc)
   * [References](#references)
 
 ---
@@ -146,7 +146,8 @@ power approach, steering a beamformer on a grid and checking for peaks on
 the power output, or by a subspace approach such as MUSIC. Another
 alternative is to utilize the acoustic intensity vector, obtained from
 the first-order signals, which its temporal and spatial statistics reveal
-information about presence and distribution of sound sources.
+information about presence and distribution of sound sources. For an 
+overview on steered-response power techniques, the reader is refered to [ref 13].
 
 A few examples of DoA estimation in the SHD are included in the library:
 
@@ -157,7 +158,7 @@ decomposition (regular) beamforming
 * MUSIC DoA estimation in the SHD
 
 ---
-## Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 13-17] <a name = "diffuseness"></a>
+## Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 14-18] <a name = "diffuseness"></a>
 
 Diffuseness is a measure of how close a sound-field represents ideal
 diffuse field conditions, meaning a sound-field of plane waves with random 
@@ -185,7 +186,7 @@ The following diffuseness measures are implemented
 * COMEDIE estimator (CMD) [ref.17]
 
 ---
-## Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,18] <a name = "dfc"></a>
+## Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,19] <a name = "dfc"></a>
 
 The diffuse-field coherence (DFC) matrix, under isotropic diffuse conditions,
 is a fundamental quantity in acoustical array processing, since it models
@@ -252,27 +253,31 @@ References mentioned in the code and the examples:
   12. Thiergart, O., Taseska, M. and Habets, E.A., 2014. 
       An informed parametric spatial filter based on instantaneous direction-of-arrival estimates. 
       IEEE/ACM Transactions on Audio, Speech, and Language Processing, 22(12), pp.2182-2196.
+      
+  13. Delikaris-Manias, D., Pavlidi, S., Pulkki, V., and Mouchtaris, A., 2016.
+      3D localization of multiple audio sources utilizing 2D DOA histograms
+      In European Signal Processing Conference (EUSIPCO 2016).
 
-  13. Merimaa, J. and Pulkki, V., 2005. 
+  14. Merimaa, J. and Pulkki, V., 2005. 
       Spatial impulse response rendering I: Analysis and synthesis. 
       Journal of the Audio Engineering Society, 53(12), pp.1115-1127.
 
-  14. Ahonen, J. and Pulkki, V., 2009. 
+  15. Ahonen, J. and Pulkki, V., 2009. 
       Diffuseness estimation using temporal variation of intensity vectors. 
       In 2009 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA).
 
-  15. Politis, A., Delikaris-Manias, S. and Pulkki, V., 2015. 
+  16. Politis, A., Delikaris-Manias, S. and Pulkki, V., 2015. 
       Direction-of-arrival and diffuseness estimation above spatial aliasing for symmetrical directional microphone arrays. 
       In 2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP).
 
-  16. Gover, B.N., Ryan, J.G. and Stinson, M.R., 2002. 
+  17. Gover, B.N., Ryan, J.G. and Stinson, M.R., 2002. 
       Microphone array measurement system for analysis of directional and spatial variations of sound fields. 
       The Journal of the Acoustical Society of America, 112(5), pp.1980-1991.
 
-  17. Epain, N. and Jin, C.T., 2016. 
+  18. Epain, N. and Jin, C.T., 2016. 
       Spherical Harmonic Signal Covariance and Sound Field Diffuseness. 
       IEEE/ACM Transactions on Audio, Speech, and Language Processing, 24(10), pp.1796-1807.
 
-  18. Elko, G.W., 2001. 
+  19. Elko, G.W., 2001. 
       Spatial coherence functions for differential microphones in isotropic noise fields. 
       In Microphone Arrays (pp. 61-85). Springer Berlin Heidelberg.
