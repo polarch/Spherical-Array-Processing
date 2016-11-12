@@ -6,9 +6,15 @@ A collection of MATLAB routines for acoustical array processing on spherical har
 >   Archontis Politis, 2014 
 >
 >   Department of Signal Processing and Acoustics, Aalto University, Finland 
+>
 >   archontis.politis@aalto.fi 
 >
 ---
+
+This library was developed during my doctoral research in the [Communication Acoustics Research Group] (http://spa.aalto.fi/en/research/research_groups/communication_acoustics/), Aalto, Finland. If you would like to reference the code, you can refer to my dissertation published [here](https://aaltodoc.aalto.fi/handle/123456789/22499):
+
+    Archontis Politis, Microphone array processing for parametric spatial audio techniques, 2016
+    Doctoral Dissertation, Department of Signal Processing and Acoustics, Aalto University, Finland
 
 ## Description <a name="description"></a>
 
@@ -59,9 +65,9 @@ contact archontis.politis@aalto.fi
   * [Microphone Signals to Spherical Harmonic signals [refs 1-4]](#mic2sh)
   * [Signal-independent Beamforming in the Spherical Harmonic Domain [refs 5-10]](#sibeam)
   * [Signal-Dependent and Parametric Beamforming [refs 11-12]](#sdbeam)
-  * [Direction-of-Arrival (DoA) Estimation in the SHD [ref 13]](#doa)
-  * [Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 14-18]](#diffuseness)  
-  * [Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,19]](#dfc)
+  * [Direction-of-Arrival (DoA) Estimation in the SHD [refs 13-17]](#doa)
+  * [Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 18-22]](#diffuseness)  
+  * [Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,23]](#dfc)
   * [References](#references)
 
 ---
@@ -139,27 +145,25 @@ omnidirectional response
 (iPMMW) in the SHD [ref12]
 
 ---
-## Direction-of-Arrival (DoA) Estimation in the SHD <a name="doa"></a>
+## Direction-of-Arrival (DoA) Estimation in the SHD [refs 13-17]<a name="doa"></a>
 
 Direction of arrival (DoA) estimation can be done by a steered-response 
 power approach, steering a beamformer on a grid and checking for peaks on
-the power output, or by a subspace approach such as MUSIC. Another
-alternative is to utilize the acoustic intensity vector, obtained from
-the first-order signals, which its temporal and spatial statistics reveal
-information about presence and distribution of sound sources. For an 
-overview on steered-response power techniques in the SHD, the reader is 
-refered to [ref 13].
+the power output [refs 13-14,16-17] or by a subspace approach such as MUSIC. 
+Another alternative is to utilize the acoustic intensity vector [ref 15], 
+obtained from the first-order signals, which its temporal and spatial statistics 
+reveal information about presence and distribution of sound sources.
 
 A few examples of DoA estimation in the SHD are included in the library:
 
 * Steered-response power DoA estimation, based on plane-wave 
-decomposition (regular) beamforming
-* Steered-response power DoA estimation, based on MVDR beamforming
-* Acoustic intensity vector DoA estimation
-* MUSIC DoA estimation in the SHD
+decomposition (regular) beamforming [refs 13,17]
+* Steered-response power DoA estimation, based on MVDR beamforming [ref 14]
+* Acoustic intensity vector DoA estimation [ref 15]
+* MUSIC DoA estimation in the SHD [refs 14,16]
 
 ---
-## Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 14-18] <a name = "diffuseness"></a>
+## Diffuseness and Direct-to-diffuse Ratio (DDR) Estimation [refs 18-22] <a name = "diffuseness"></a>
 
 Diffuseness is a measure of how close a sound-field represents ideal
 diffuse field conditions, meaning a sound-field of plane waves with random 
@@ -180,14 +184,14 @@ diffuse sound suppresion.
 
 The following diffuseness measures are implemented
 
-* intensity-energy density ratio (IE) [ref.13]
-* temporal variation of intensity vectors (TV) [ref.14]
-* spherical variance of intensity DoAs (SV) [ref.15]
-* directional power variance (DPV) [ref.16]
-* COMEDIE estimator (CMD) [ref.17]
+* intensity-energy density ratio (IE) [ref.18]
+* temporal variation of intensity vectors (TV) [ref.19]
+* spherical variance of intensity DoAs (SV) [ref.20]
+* directional power variance (DPV) [ref.21]
+* COMEDIE estimator (CMD) [ref.22]
 
 ---
-## Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,19] <a name = "dfc"></a>
+## Diffuse-field Coherence of Directional Sensors/beamformers [refs 8,23] <a name = "dfc"></a>
 
 The diffuse-field coherence (DFC) matrix, under isotropic diffuse conditions,
 is a fundamental quantity in acoustical array processing, since it models
@@ -255,30 +259,46 @@ References mentioned in the code and the examples:
       An informed parametric spatial filter based on instantaneous direction-of-arrival estimates. 
       IEEE/ACM Transactions on Audio, Speech, and Language Processing, 22(12), pp.2182-2196.
       
-  13. Delikaris-Manias, D., Pavlidi, S., Pulkki, V., and Mouchtaris, A., 2016.
+  13. Park, M., and Rafaely, B., 2005. 
+      Sound-field analysis by plane-wave decomposition using spherical microphone array. 
+      The Journal of the Acoustical Society of America, 118(5), 3094-3103.
+      
+  14. Khaykin, D., and Rafaely, B., 2012. 
+      Acoustic analysis by spherical microphone array processing of room impulse responses. 
+      The Journal of the Acoustical Society of America, 132(1), 261-270.
+      
+  15. Tervo, S., 2009.
+      Direction estimation based on sound intensity vectors. 
+      In 17th European Signal Processing Conference, (EUSIPCO 2009).
+      
+  16. Tervo, S., and Politis, A., 2015. 
+      Direction of arrival estimation of reflections from room impulse responses using a spherical microphone array. 
+      IEEE/ACM Transactions on Audio, Speech and Language Processing (TASLP), 23(10), 1539-1551.      
+      
+  17. Delikaris-Manias, D., Pavlidi, S., Pulkki, V., and Mouchtaris, A., 2016.
       3D localization of multiple audio sources utilizing 2D DOA histograms
       In European Signal Processing Conference (EUSIPCO 2016).
 
-  14. Merimaa, J. and Pulkki, V., 2005. 
+  18. Merimaa, J. and Pulkki, V., 2005. 
       Spatial impulse response rendering I: Analysis and synthesis. 
       Journal of the Audio Engineering Society, 53(12), pp.1115-1127.
 
-  15. Ahonen, J. and Pulkki, V., 2009. 
+  19. Ahonen, J. and Pulkki, V., 2009. 
       Diffuseness estimation using temporal variation of intensity vectors. 
       In 2009 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA).
 
-  16. Politis, A., Delikaris-Manias, S. and Pulkki, V., 2015. 
+  20. Politis, A., Delikaris-Manias, S. and Pulkki, V., 2015. 
       Direction-of-arrival and diffuseness estimation above spatial aliasing for symmetrical directional microphone arrays. 
       In 2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP).
 
-  17. Gover, B.N., Ryan, J.G. and Stinson, M.R., 2002. 
+  21. Gover, B.N., Ryan, J.G. and Stinson, M.R., 2002. 
       Microphone array measurement system for analysis of directional and spatial variations of sound fields. 
       The Journal of the Acoustical Society of America, 112(5), pp.1980-1991.
 
-  18. Epain, N. and Jin, C.T., 2016. 
+  22. Epain, N. and Jin, C.T., 2016. 
       Spherical Harmonic Signal Covariance and Sound Field Diffuseness. 
       IEEE/ACM Transactions on Audio, Speech, and Language Processing, 24(10), pp.1796-1807.
 
-  19. Elko, G.W., 2001. 
+  23. Elko, G.W., 2001. 
       Spatial coherence functions for differential microphones in isotropic noise fields. 
       In Microphone Arrays (pp. 61-85). Springer Berlin Heidelberg.
