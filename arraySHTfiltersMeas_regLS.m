@@ -38,7 +38,7 @@ function [H_filt, h_filt] = arraySHTfiltersMeas_regLS(H_array, order_sht, grid_d
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-nGrid = length(H_array,3);
+nGrid = size(H_array,3);
 nMics = size(H_array,2);
 if order_sht>sqrt(nMics)-1
     warning('Set order too high for the number of microphones, should be N<=sqrt(Q)-1')
