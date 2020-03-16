@@ -175,7 +175,7 @@ grid_dirs_rad = grid_dirs_deg*pi/180;
 [~, H_array_sim] = simulateSphArray(Lfilt, mic_dirs_rad, grid_dirs_rad, arrayType, R, array_order, fs);
 
 % Define an inline function for super-titles in subplots
-supertitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
+sgtitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
 
 % Apply a plain SHT on the microphone responses without equalization.
 M_mic2sh_sht = (1/nMics)*Y_mics';
@@ -184,7 +184,7 @@ Y_grid = sqrt(4*pi) * getSH(sht_order, aziElev2aziPolar(grid_dirs_rad), 'real');
 %w_grid = getVoronoiWeights(grid_dirs_rad); % get approximate integration weights for grid points
 %evaluateSHTfilters(repmat(M_mic2sh_sht, [1 1 nBins]), H_array_sim, fs, Y_grid, w_grid);
 evaluateSHTfilters(repmat(M_mic2sh_sht, [1 1 nBins]), H_array_sim, fs, Y_grid);
-supertitle('Ideal array - Plain SHT'); h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+sgtitle('Ideal array - Plain SHT'); h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
 % Apply single channel regularized inversion, as found e.g. in [ref1]
@@ -195,7 +195,7 @@ for kk=1:nBins
     M_mic2sh_radinv(:,:,kk) = diag(replicatePerOrder(H_filt(kk,:),2))*M_mic2sh_sht;
 end
 evaluateSHTfilters(M_mic2sh_radinv, H_array_sim, fs, Y_grid);
-supertitle('Ideal array - Regularized inversion of radial response');
+sgtitle('Ideal array - Regularized inversion of radial response');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
@@ -206,14 +206,14 @@ for kk=1:nBins
     M_mic2sh_softlim(:,:,kk) = diag(replicatePerOrder(H_filt(kk,:),2))*M_mic2sh_sht;
 end
 evaluateSHTfilters(M_mic2sh_softlim, H_array_sim, fs, Y_grid);
-supertitle('Ideal array - Soft-limited inversion of radial response');
+sgtitle('Ideal array - Soft-limited inversion of radial response');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
 % Invert the full theoretical array response matrix, as proposed in [ref4]
 M_mic2sh_regLS = arraySHTfiltersTheory_regLS(R, mic_dirs_rad, sht_order, Lfilt, fs, maxG_dB);
 evaluateSHTfilters(M_mic2sh_regLS, H_array_sim, fs, Y_grid);
-supertitle('Ideal array - Regularized array response matrix inversion');
+sgtitle('Ideal array - Regularized array response matrix inversion');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
@@ -247,13 +247,13 @@ H_array_meas = H_array_meas/norm_diff;
 % first show results when applying the theory-devised filters to the
 % real Eigenmike array
 evaluateSHTfilters(M_mic2sh_radinv, H_array_meas, fs, Y_grid, w_grid);
-supertitle('Measured array - Theoretical regularized inversion of radial response');
+sgtitle('Measured array - Theoretical regularized inversion of radial response');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 evaluateSHTfilters(M_mic2sh_softlim, H_array_meas, fs, Y_grid, w_grid);
-supertitle('Measured array - Theoretical soft-limited inversion of radial response');
+sgtitle('Measured array - Theoretical soft-limited inversion of radial response');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 evaluateSHTfilters(M_mic2sh_regLS, H_array_meas, fs, Y_grid, w_grid);
-supertitle('Measured array - Theoretical regularized array response matrix inversion');
+sgtitle('Measured array - Theoretical regularized array response matrix inversion');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 %%
@@ -262,13 +262,13 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 % Invert the measured array response matrix, as proposed in [ref1]
 E_mic2sh_regLS = arraySHTfiltersMeas_regLS(H_array_meas, sht_order, grid_dirs_rad, w_grid, Lfilt, maxG_dB);
 evaluateSHTfilters(E_mic2sh_regLS, H_array_meas, fs, Y_grid, w_grid);
-supertitle('Measured array - Regularized inversion of measured array response matrix');
+sgtitle('Measured array - Regularized inversion of measured array response matrix');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 % Invert the SH coefficients of the array response matrix, as proposed in [ref4]
 E_mic2sh_regLSHD = arraySHTfiltersMeas_regLSHD(H_array_meas, sht_order, grid_dirs_rad, w_grid, Lfilt, maxG_dB);
 evaluateSHTfilters(E_mic2sh_regLSHD, H_array_meas, fs, Y_grid, w_grid);
-supertitle('Measured array - Regularized inversion of SH transformed measured array response matrix');
+sgtitle('Measured array - Regularized inversion of SH transformed measured array response matrix');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 
@@ -310,7 +310,7 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 clear all; close all;
 % Define an inline function for super-titles in subplots
-supertitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
+sgtitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
 
 %%% ---Cardioids
 
@@ -322,7 +322,7 @@ for n=1:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['order = ' num2str(n)])
 end
-supertitle('Cardioid patterns of various orders');
+sgtitle('Cardioid patterns of various orders');
 h = gcf; h.Position(3) = 1.5*h.Position(3);
 % get the beamforming weights for a rotated 3rd-order cardioid to 120deg azi
 % and 60deg elevation
@@ -343,7 +343,7 @@ for n=1:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['order = ' num2str(n)])
 end
-supertitle('Hypercardioid patterns of various orders');
+sgtitle('Hypercardioid patterns of various orders');
 h = gcf; h.Position(3) = 1.5*h.Position(3);
 %%
 
@@ -361,7 +361,7 @@ for n=1:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['order = ' num2str(n)])
 end
-supertitle('Supercardioid patterns of various orders');
+sgtitle('Supercardioid patterns of various orders');
 h = gcf; h.Position(3) = 1.5*h.Position(3);
 %%
 
@@ -384,7 +384,7 @@ for n=1:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['order = ' num2str(n)])
 end
-supertitle('Max-EV patterns of various orders');
+sgtitle('Max-EV patterns of various orders');
 h = gcf; h.Position(3) = 1.5*h.Position(3);
 %%
 
@@ -409,7 +409,7 @@ for n=2:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['order = ' num2str(n) ', sidelobe = ' num2str(slobes(n-1))])
 end
-supertitle('Dolph-Chebyshev patterns of various orders');
+sgtitle('Dolph-Chebyshev patterns of various orders');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
@@ -437,7 +437,7 @@ for n=1:3
     plotAxisymPatternFromCoeffs(b_n, h)
     title(['Diff. to SHD weights: order = ' num2str(n)])
 end
-supertitle('Comparison between spherical and differential-to-spherical weights');
+sgtitle('Comparison between spherical and differential-to-spherical weights');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
@@ -463,7 +463,7 @@ for n=1:4
     plotAxisymPatternFromCoeffs(w_n, h)
     title(['Torus d(\theta)=|\sin(\theta)|^' num2str(n)])
 end
-supertitle('4th-order toroidal patterns');
+sgtitle('4th-order toroidal patterns');
 h = gcf; h.Position(3) = 1.5*h.Position(3);
 % rotate a toroidal pattern to 30deg azi and 60deg elevation
 fPattern = @(azi,elev) ones(size(azi)).*abs(cos(elev));
@@ -505,7 +505,7 @@ for n=1:3
     plotSphFunctionCoeffs(v_nm(:,n), 'real', 5, 5, 'real', h_ax)
     title(['3rd-order velocity patterns: ' vel_labels{n}]), view(65,30), axis([-1 1 -1 1 -1 1])
 end
-supertitle('Sector and resulting velocity patterns example')
+sgtitle('Sector and resulting velocity patterns example')
 h = gcf; h.Position(3) = 2*h.Position(3);
 
 
@@ -533,7 +533,7 @@ h = gcf; h.Position(3) = 2*h.Position(3);
 
 clear all; close all;
 % Define an inline function for super-titles in subplots
-supertitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
+sgtitle = @(title_string) annotation('textbox', [0 0.9 1 0.1],'String', title_string,'EdgeColor', 'none','HorizontalAlignment', 'center','FontSize', 16);
 % function to convert from azimuth-inclination to azimuth-elevation
 aziElev2aziPolar = @(dirs) [dirs(:,1) pi/2-dirs(:,2)];
 
@@ -556,7 +556,7 @@ h_ax = subplot(132); plotSphFunctionCoeffs(W_nullpwd(:,2), 'real', 5, 5, 'real',
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
 h_ax = subplot(133); plotSphFunctionCoeffs(W_nullpwd(:,3), 'real', 5, 5, 'real', h_ax); view(3), axis([-1 1 -1 1 -1 1])
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
-supertitle('PWD beamformer on first, second, and third DoA, with nulls at the rest');
+sgtitle('PWD beamformer on first, second, and third DoA, with nulls at the rest');
 h = gcf; h.Position(3) = 2*h.Position(3);
 %%
 
@@ -608,7 +608,7 @@ h_ax = subplot(132); plotSphFunctionCoeffs(W_mvdr(:,2), 'real', 5, 5, 'real', h_
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
 h_ax = subplot(133); plotSphFunctionCoeffs(W_mvdr(:,3), 'real', 5, 5, 'real', h_ax); view(3), axis([-1 1 -1 1 -1 1])
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
-supertitle('MVDR beamformer on first, second, and third DoA');
+sgtitle('MVDR beamformer on first, second, and third DoA');
 h = gcf; h.Position(3) = 2*h.Position(3);
 %%
 
@@ -689,7 +689,7 @@ h_ax = subplot(132); plotSphFunctionCoeffs(W_mvdr(:,2), 'real', 5, 5, 'real', h_
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
 h_ax = subplot(133); plotSphFunctionCoeffs(W_mvdr(:,3), 'real', 5, 5, 'real', h_ax); view(3), axis([-1 1 -1 1 -1 1])
 line([0 0 0; src_xyz(:,1)'],[0 0 0; src_xyz(:,2)'],[0 0 0; src_xyz(:,3)'],'color','k','linewidth',3,'linestyle','--')
-supertitle('iPMMW beamformer for first, second, and third DoA');
+sgtitle('iPMMW beamformer for first, second, and third DoA');
 h = gcf; h.Position(3) = 2*h.Position(3);
 
 
