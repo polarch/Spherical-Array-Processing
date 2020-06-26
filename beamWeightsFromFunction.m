@@ -18,6 +18,8 @@ function b_nm = beamWeightsFromFunction(fHandleArray, order)
 
 % get a dense uniform design
 [~, dirsAziElev] = getTdesign(20);
+% convert azi-elev to azi-incl
+dirsAziInc = [dirsAziElev(:,1) pi/2-dirsAziElev(:,2)];
 
 Nfunc = length(fHandleArray);
 b_nm = zeros((order+1)^2, Nfunc);
