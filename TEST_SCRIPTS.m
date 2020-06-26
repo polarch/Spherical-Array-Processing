@@ -851,10 +851,11 @@ pvsig = M_sh2pv*shsig(1:4,:);
 % partition the signal into 100 sample buffers with 50% overlap
 lBuf = 100;
 lHop = 50;
-nBuf = lSig/lHop;
-pvsig_buf = zeros(nSH, lBuf, lSig/lHop);
-for ns=1:nSH
-    pvsig_buf(ns,:,:) = buffer(pvsig(ns,:)', lBuf, lHop);
+lOvlp = lBuf - lHop;
+nBuf = ceil(lSig/lHop);
+pvsig_buf = zeros(4, lBuf, nBuf);
+for ns=1:4
+    pvsig_buf(ns,:,:) = buffer(pvsig(ns,:)', lBuf, lOvlp);
 end
 % compute correlations of pressure-velocity for each partition, for
 % short-time estimates of intensity vector
