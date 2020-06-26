@@ -906,7 +906,7 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %
 % The following code examples illustrates use of these methods.
 
-%%% ---Sigle source case
+%%% ---Single source case
 %
 % In the basic mixture of a single point/plane wave source, and an
 % isotropic diffuse field, all estimators perform well. More specifically
