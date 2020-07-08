@@ -709,6 +709,7 @@ h = gcf; h.Position(3) = 2*h.Position(3);
 % * Steered-response power DoA estimation, based on MVDR beamforming
 % * Acoustic intensity vector DoA estimation
 % * Eigenbeam-MUSIC DoA estimation
+% * Eigenbeam-Esprit DoA estimation
 %
 % The following code examples illustrates use of these methods.
 
@@ -810,6 +811,48 @@ line(src_dirs_deg(:,1), src_dirs_deg(:,2), line_args{:});
 line_args = {'linestyle','none','marker','x','color','r', 'linewidth',1.5,'markersize',12};
 line(est_dirs_music(:,1), est_dirs_music(:,2), line_args{:});
 xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('MUSIC DoA, o: true directions, x: estimated')
+h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+%%
+
+%%% ---ESPRIT
+%
+% The Esprit method is another subspace method like MUSIC, however it is 
+% rotation-invariance properties of subsets of the array channels, and based
+% on that, it can estimate the DoAs in a gridless search-free way. Otherwise, 
+% it has the same properties and limitations as MUSIC, high-resolution, and
+% sensitivity to correlation between directional signals. Since ESPRIT for
+% SH signals is formulated with complex SHs, we transform the spatial
+% correlation matrix from the one based on real SHs to the one based on
+% complex ones, before passing to the method.
+
+% signal modeling
+order = 3;
+nSH = (order+1)^2;
+src_dirs = [0 0; pi/2 0; pi pi/4];
+nSrc = 3;
+Y_src = getSH(order, aziElev2aziPolar(src_dirs), 'real');
+stVec = Y_src';
+P_src = diag([1 1 1]); % unit powers for the three sources
+P_diff = 1; % unit power for the diffuse sound
+sphCOV_real = stVec*P_src*stVec' + P_diff*eye(nSH)/(4*pi);
+% Convert SCM to the complex SH basis
+T_r2c = conj(real2complexSHMtx(order));
+sphCOV_complex = T_r2c*sphCOV_real*T_r2c';
+% Build signal subspace
+[U,~] = eig(sphCOV_complex);
+U = U(:,end:-1:1);
+Us = U(:,1:nSrc);
+% DoA estimation
+est_dirs_esprit = sphESPRIT(Us);
+est_dirs_esprit = est_dirs_esprit*180/pi;
+% plots results
+plotDirectionalMapFromGrid(zeros(size(grid_dirs,1),1), 5, 5, [], 0, 0);
+src_dirs_deg = src_dirs*180/pi;
+line_args = {'linestyle','none','marker','o','color','r', 'linewidth',1.5,'markersize',12};
+line(src_dirs_deg(:,1), src_dirs_deg(:,2), line_args{:});
+line_args = {'linestyle','none','marker','x','color','b', 'linewidth',1.5,'markersize',12};
+line(est_dirs_esprit(:,1), est_dirs_esprit(:,2), line_args{:});
+xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('ESPRIT DoA, o: true directions, x: estimated')
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 %%
 
