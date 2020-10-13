@@ -816,10 +816,10 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 %%% ---ESPRIT
 %
-% The Esprit method is another subspace method like MUSIC, however it is 
-% rotation-invariance properties of subsets of the array channels, and based
-% on that, it can estimate the DoAs in a gridless search-free way. Otherwise, 
-% it has the same properties and limitations as MUSIC, high-resolution, and
+% The Esprit method is another subspace method like MUSIC, however based on
+% rotation-invariance properties of subsets of the array channels, it can 
+% estimate the DoAs in a gridless search-free way. Otherwise, it has the 
+% same properties and limitations as MUSIC, high-resolution, and 
 % sensitivity to correlation between directional signals. Since ESPRIT for
 % SH signals is formulated with complex SHs, we transform the spatial
 % correlation matrix from the one based on real SHs to the one based on
@@ -854,6 +854,67 @@ line_args = {'linestyle','none','marker','x','color','b', 'linewidth',1.5,'marke
 line(est_dirs_esprit(:,1), est_dirs_esprit(:,2), line_args{:});
 xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('ESPRIT DoA, o: true directions, x: estimated')
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+%%
+
+%%% ---Sparse recovery based DoA estimation
+%
+% This example demonstrates DoA estimation based on sparse recovery
+% (compressed sensing principles), where the microphone signals are seen as
+% a combination of a dense set of plane-wave signals with unknown
+% amplitudes, form which only a few are active (sparse). If the recording is
+% indeed sparse in that sense (a few dry directional sources) the sparse
+% solution returns both the sparse signals themselves, and the entries in
+% the solution with significant power returns directly their DoAs.
+
+% Build dense (overcomplete) matrix of SH vectors (dictionary) for the sparse solution
+order = 3; % SH order
+Y_grid = getSH(order, aziElev2aziPolar(grid_dirs_rad), 'real')*sqrt(4*pi);
+A_grid = Y_grid'; % steering vector matrix
+
+% Source signal modeling
+% three unit power white noise sources
+lSig = 10000; % samples
+nSrc = 5;
+src_dirs = (2*rand(nSrc,2)-1)*pi * diag([1, 1/2]);
+Psrc = [1 1 1]; % pw signal powers
+srcsig = randn(nSrc, lSig);
+nSH = (order+1)^2;
+Y_src = getSH(order, aziElev2aziPolar(src_dirs), 'real');
+A_dir = Y_src';
+sh_dirsig = A_dir*srcsig; % SH signals for sources
+
+% Diffuse signal modeling
+[~, diff_dirs] = getTdesign(21); % get dense uniform distribution of directions (240-point t-design)
+nDiff = size(diff_dirs,1);
+Pdiff = 0.1; % diffuse sound power at 0dB
+diffsig = sqrt(Pdiff/nDiff)*randn(nDiff, lSig);
+Y_diff = getSH(order, aziElev2aziPolar(diff_dirs), 'real');
+A_diff = Y_diff';
+sh_diffsig = A_diff*diffsig; % SH signals for diffuse sound
+
+% Total SH signals
+shsig = sh_dirsig+sh_diffsig;
+
+% Sparse recovery parameters
+% Diffuse-to-total ratio (DTR) used as regularization (Epain & Jin)
+diffuseness = Pdiff/(sum(Psrc) + Pdiff); % use any diffuseness estimator here in practice
+p = 0.9; % sparsifying exponent
+stopValue = 10^-10; % error value to stop the iterations
+maxIter = 50; % maximum number of iterations before stopping, if the stopValue is not reached
+% compute powers at grid points returned by the sparse solution
+[P_sr, est_dirs_sr] = sphSRmap(shsig, p, A_grid, diffuseness, stopValue, maxIter, grid_dirs_rad, nSrc);
+est_dirs_sr = est_dirs_sr*180/pi;
+
+% plots results
+plotDirectionalMapFromGrid(P_sr, 5, 5, [], 0, 0);
+src_dirs_deg = src_dirs*180/pi;
+line_args = {'linestyle','none','marker','o','color','r', 'linewidth',1.5,'markersize',12};
+line(src_dirs_deg(:,1), src_dirs_deg(:,2), line_args{:});
+line_args = {'linestyle','none','marker','x','color','r', 'linewidth',1.5,'markersize',12};
+line(est_dirs_sr(:,1), est_dirs_sr(:,2), line_args{:});
+xlabel('Azimuth (deg)'), ylabel('Elevation (deg)'), title('Sparse Recovery DoA, o: true directions, x: estimated')
+h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+
 %%
 
 %%% ---Intensity vector DoA estimation
