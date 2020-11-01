@@ -270,7 +270,51 @@ E_mic2sh_regLSHD = arraySHTfiltersMeas_regLSHD(H_array_meas, sht_order, grid_dir
 evaluateSHTfilters(E_mic2sh_regLSHD, H_array_meas, fs, Y_grid, w_grid);
 sgtitle('Measured array - Regularized inversion of SH transformed measured array response matrix');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+%%
 
+%%% ---Diffuse-field Equalization above aliasing
+%
+% Since it is impossible to linearly approximate the ideal spherical
+% harmonics through the encoding matrix above aliasing, a practical
+% approach is to equalize the output of the filter matrix to be flat under
+% a diffuse field excitation. That means that even though the spatial response
+% of the channels is not ideal at those frequencies, at least it produces a 
+% flat power spectrum on average. This is also the approach favoured by Gerzon 
+% in the pioneering work on the tetrahedral microphone array and, we assume,
+% what is implemented in practice in the Sound-field microphones.
+
+% SH values for the simulation grid of directions
+[grid_azi, grid_elev] = meshgrid(-180:5:180, -85:5:85);
+grid_dirs_deg = [grid_azi(:) grid_elev(:)];
+grid_dirs_rad = grid_dirs_deg*pi/180;
+Y_grid = sqrt(4*pi) * getSH(sht_order, aziElev2aziPolar(grid_dirs_rad), 'real');
+% Apply single channel regularized inversion, as found e.g. in [ref1]
+maxG_dB = 15; % maximum allowed amplification
+H_filt = arraySHTfiltersTheory_radInverse(R, nMics, sht_order, Lfilt, fs, maxG_dB);
+% combine the per-order filters with the SHT matrix for evaluation of full filter matrix
+for kk=1:nBins
+    M_mic2sh_radinv(:,:,kk) = diag(replicatePerOrder(H_filt(kk,:),2))*M_mic2sh_sht;
+end
+evaluateSHTfilters(M_mic2sh_radinv, H_array_sim, fs, Y_grid);
+supertitle('Theoretical encoder without diffuse-field equalization (radinv)');
+h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+
+% We can observe that the inversion works well up to aliasing, but since it
+% ignores it, the diffuse-field repsonse of the array starts rise
+% unnaturally at high frequencies.
+
+% Get theoretical diffuse coherence matrix of the array
+M_diffcoh = getDiffCohMtxTheory(mic_dirs_rad, arrayType, R, array_order, f, []);
+% Apply diffuse-field equalization to the encoding filter matrix
+M_mic2sh_diffeq = arraySHTfilters_diffEQ(M_mic2sh_radinv, M_diffcoh, f_alias, fs);
+% Plots
+evaluateSHTfilters(M_mic2sh_diffeq, H_array_sim, fs, Y_grid);
+supertitle('Theoretical encoder with diffuse-field equalization (radinv)');
+h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
+
+% We can observe that the diffuse-field response of all components have
+% been equalized above whatever freqeuncy limit is detected as aliasing
+% limit.
 
 %% SIGNAL-INDEPENDENT BEAMFORMING IN THE SPHERICAL HARMONIC DOMAIN
 %
