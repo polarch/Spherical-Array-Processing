@@ -296,7 +296,7 @@ for kk=1:nBins
     M_mic2sh_radinv(:,:,kk) = diag(replicatePerOrder(H_filt(kk,:),2))*M_mic2sh_sht;
 end
 evaluateSHTfilters(M_mic2sh_radinv, H_array_sim, fs, Y_grid);
-supertitle('Theoretical encoder without diffuse-field equalization (radinv)');
+sgtitle('Theoretical encoder without diffuse-field equalization (radinv)');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 % We can observe that the inversion works well up to aliasing, but since it
@@ -309,7 +309,7 @@ M_diffcoh = getDiffCohMtxTheory(mic_dirs_rad, arrayType, R, array_order, f, []);
 M_mic2sh_diffeq = arraySHTfilters_diffEQ(M_mic2sh_radinv, M_diffcoh, f_alias, fs);
 % Plots
 evaluateSHTfilters(M_mic2sh_diffeq, H_array_sim, fs, Y_grid);
-supertitle('Theoretical encoder with diffuse-field equalization (radinv)');
+sgtitle('Theoretical encoder with diffuse-field equalization (radinv)');
 h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 % We can observe that the diffuse-field response of all components have
@@ -912,7 +912,7 @@ h = gcf; h.Position(3) = 1.5*h.Position(3); h.Position(4) = 1.5*h.Position(4);
 
 % Build dense (overcomplete) matrix of SH vectors (dictionary) for the sparse solution
 order = 3; % SH order
-Y_grid = getSH(order, aziElev2aziPolar(grid_dirs_rad), 'real')*sqrt(4*pi);
+Y_grid = getSH(order, aziElev2aziPolar(grid_dirs), 'real')*sqrt(4*pi);
 A_grid = Y_grid'; % steering vector matrix
 
 % Source signal modeling
@@ -946,7 +946,7 @@ p = 0.9; % sparsifying exponent
 stopValue = 10^-10; % error value to stop the iterations
 maxIter = 50; % maximum number of iterations before stopping, if the stopValue is not reached
 % compute powers at grid points returned by the sparse solution
-[P_sr, est_dirs_sr] = sphSRmap(shsig, p, A_grid, diffuseness, stopValue, maxIter, grid_dirs_rad, nSrc);
+[P_sr, est_dirs_sr] = sphSRmap(shsig, p, A_grid, diffuseness, stopValue, maxIter, grid_dirs, nSrc);
 est_dirs_sr = est_dirs_sr*180/pi;
 
 % plots results
