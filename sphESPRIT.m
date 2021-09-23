@@ -1,4 +1,4 @@
-function src_dirs_rad = sphESPRIT2(Us)
+function src_dirs_rad = sphESPRIT(Us)
 %SPHESPRIT DoA estimation using ESPRIT in the SHD
 %   
 %   This routine spherical ESPRIT method to SH signals and returns the 
