@@ -39,6 +39,7 @@ c = 343;
 f = (0:Lfilt/2)'*fs/Lfilt;
 kR = 2*pi*f*R/c;
 kR_max = kR(end);
+order_array = min(30, floor(2*kR_max));
 
 Nmic = size(mic_dirsAziElev,1);
 if order_sht>sqrt(Nmic)-1
@@ -47,7 +48,6 @@ if order_sht>sqrt(Nmic)-1
 end
 
 mic_dirsAziIncl = [mic_dirsAziElev(:,1) pi/2-mic_dirsAziElev(:,2)];
-order_array = floor(2*kR_max);
 Y_array = sqrt(4*pi)*getSH(order_array, mic_dirsAziIncl, 'real');
 
 % modal responses
